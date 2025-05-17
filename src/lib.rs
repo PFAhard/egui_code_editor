@@ -78,9 +78,9 @@ mod themes;
 use egui::text::LayoutJob;
 #[cfg(feature = "egui")]
 use egui::widgets::text_edit::TextEditOutput;
+pub use highlighting::Token;
 #[cfg(feature = "egui")]
 use highlighting::highlight;
-pub use highlighting::Token;
 #[cfg(feature = "editor")]
 use std::hash::{Hash, Hasher};
 pub use syntax::{Syntax, TokenType};
@@ -342,6 +342,7 @@ impl CodeEditor {
                             .frame(true)
                             .desired_width(self.desired_width)
                             .layouter(&mut layouter)
+                            .interactive(false)
                             .show(ui);
                         text_edit_output = Some(output);
                     });
