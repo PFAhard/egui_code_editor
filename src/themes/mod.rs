@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 pub mod ayu;
+pub mod custom;
 pub mod github;
 pub mod gruvbox;
 pub mod sonokai;
@@ -52,6 +53,7 @@ pub struct ColorTheme {
     pub punctuation: &'static str,
     pub strs: &'static str,
     pub types: &'static str,
+    pub parameters: &'static str,
     pub special: &'static str,
 }
 impl Default for ColorTheme {
@@ -107,6 +109,9 @@ impl ColorTheme {
             TokenType::Special => self.special,
             TokenType::Str(_) => self.strs,
             TokenType::Type => self.types,
+            TokenType::Paramter {
+                parameter_bg_color: _,
+            } => self.parameters,
             TokenType::Whitespace(_) | TokenType::Unknown => self.comments,
         }
     }
@@ -125,6 +130,9 @@ impl ColorTheme {
             TokenType::Str(_) => color_from_hex(self.strs),
             TokenType::Type => color_from_hex(self.types),
             TokenType::Whitespace(_) | TokenType::Unknown => color_from_hex(self.comments),
+            TokenType::Paramter {
+                parameter_bg_color: _,
+            } => color_from_hex(self.parameters),
         }
         .unwrap_or(ERROR_COLOR)
     }
@@ -151,6 +159,7 @@ impl ColorTheme {
             strs: fg,
             comments: fg,
             special: fg,
+            parameters: fg,
         }
     }
 }

@@ -18,5 +18,6 @@ impl ColorTheme {
         strs: "#e7c664",        // yellow
         types: "#399ee6",       // blue
         special: "#f39660",     // orange
+        parameters: "#e2e2e3",
     };
 }

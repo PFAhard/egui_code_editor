@@ -78,11 +78,12 @@ mod themes;
 use egui::text::LayoutJob;
 #[cfg(feature = "egui")]
 use egui::widgets::text_edit::TextEditOutput;
-pub use highlighting::Token;
 #[cfg(feature = "egui")]
 use highlighting::highlight;
+pub use highlighting::Token;
 #[cfg(feature = "editor")]
 use std::hash::{Hash, Hasher};
+use std::ops::Range;
 pub use syntax::{Syntax, TokenType};
 pub use themes::ColorTheme;
 pub use themes::DEFAULT_THEMES;
@@ -91,6 +92,7 @@ pub use themes::DEFAULT_THEMES;
 pub trait Editor: Hash {
     fn append(&self, job: &mut LayoutJob, token: &Token);
     fn syntax(&self) -> &Syntax;
+    fn background_highligh_ranges(&self) -> &[Parameters];
 }
 
 #[cfg(feature = "editor")]
@@ -108,6 +110,7 @@ pub struct CodeEditor {
     vscroll: bool,
     stick_to_bottom: bool,
     desired_width: f32,
+    ranges: Vec<Parameters>,
 }
 
 #[cfg(feature = "editor")]
@@ -135,8 +138,15 @@ impl Default for CodeEditor {
             vscroll: true,
             stick_to_bottom: false,
             desired_width: f32::INFINITY,
+            ranges: vec![],
         }
     }
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Parameters {
+    pub range: Range<usize>,
+    pub bg_color: String,
 }
 
 #[cfg(feature = "editor")]
@@ -254,11 +264,30 @@ impl CodeEditor {
         }
     }
 
+    /// Used to highlight the background
+    pub fn background_format_ranges(self, ranges: Vec<Parameters>) -> Self {
+        Self { ranges, ..self }
+    }
+
     #[cfg(feature = "egui")]
     pub fn format(&self, ty: TokenType) -> egui::text::TextFormat {
+        use egui::Color32;
+
         let font_id = egui::FontId::monospace(self.fontsize);
         let color = self.theme.type_color(ty);
-        egui::text::TextFormat::simple(font_id, color)
+        let mut t_format = egui::text::TextFormat::simple(font_id, color);
+
+        if let TokenType::Paramter { parameter_bg_color } = ty {
+            t_format.background = Color32::from_rgba_premultiplied(
+                parameter_bg_color[0],
+                parameter_bg_color[1],
+                parameter_bg_color[2],
+                10,
+            );
+            // #36542f
+        }
+
+        t_format
     }
 
     #[cfg(feature = "egui")]
@@ -370,5 +399,9 @@ impl Editor for CodeEditor {
 
     fn syntax(&self) -> &Syntax {
         &self.syntax
+    }
+
+    fn background_highligh_ranges(&self) -> &[Parameters] {
+        &self.ranges
     }
 }

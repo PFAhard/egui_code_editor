@@ -11,6 +11,16 @@ pub struct Token {
     buffer: String,
 }
 
+pub fn color_hex_to_rgb(color: &str) -> [u8; 3] {
+    let numed = u32::from_str_radix(&color[1..], 16).unwrap();
+
+    let numed_r = (numed >> 16) & 0xFF;
+    let numed_g = (numed >> 8) & 0xFF;
+    let numed_b = numed & 0xFF;
+
+    [numed_r as u8, numed_g as u8, numed_b as u8]
+}
+
 impl Token {
     pub fn new<S: Into<String>>(ty: TokenType, buffer: S) -> Self {
         Token {
@@ -73,9 +83,28 @@ impl Token {
     pub fn highlight<T: Editor>(&mut self, editor: &T, text: &str) -> LayoutJob {
         *self = Token::default();
         let mut job = LayoutJob::default();
-        for c in text.chars() {
-            for token in self.automata(c, editor.syntax()) {
-                editor.append(&mut job, &token);
+        let ranges = editor.background_highligh_ranges();
+        for (i, c) in text.chars().enumerate() {
+            if ranges.iter().any(|param| param.range.contains(&i)) {
+                let param = ranges
+                    .iter()
+                    .find(|param| param.range.contains(&i))
+                    .expect("Already checked");
+                self.buffer.push(c);
+                if !matches!(
+                    self.ty,
+                    TokenType::Paramter {
+                        parameter_bg_color: _
+                    }
+                ) {
+                    self.ty = TokenType::Paramter {
+                        parameter_bg_color: color_hex_to_rgb(&param.bg_color),
+                    };
+                }
+            } else {
+                for token in self.automata(c, editor.syntax()) {
+                    editor.append(&mut job, &token);
+                }
             }
         }
         editor.append(&mut job, self);
@@ -98,6 +127,7 @@ impl Token {
     fn automata(&mut self, c: char, syntax: &Syntax) -> Vec<Self> {
         use TokenType as Ty;
         let mut tokens = vec![];
+
         match (self.ty, Ty::from(c)) {
             (Ty::Comment(false), Ty::Whitespace('\n')) => {
                 self.buffer.push(c);
@@ -207,6 +237,11 @@ impl Token {
                 }
             }
             (Ty::Whitespace(_) | Ty::Unknown, _) => {
+                tokens.extend(self.first(c, syntax));
+            }
+            (Ty::Paramter { parameter_bg_color }, _) => {
+                self.ty = Ty::Paramter { parameter_bg_color };
+                tokens.extend(self.drain(self.ty));
                 tokens.extend(self.first(c, syntax));
             }
             // Keyword, Type, Special

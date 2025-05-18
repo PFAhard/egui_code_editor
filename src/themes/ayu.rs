@@ -18,7 +18,8 @@ impl ColorTheme {
         punctuation: "#5c6166", // foreground
         strs: "#86b300",        // green
         types: "#399ee6",       // blue
-        special: "#f07171",     // red
+        special: "#f07171",
+        parameters: "#5c6166", // red
     };
 
     pub const AYU_MIRAGE: ColorTheme = ColorTheme {
@@ -35,7 +36,8 @@ impl ColorTheme {
         punctuation: "#cccac2", // foreground
         strs: "#d5ff80",        // green
         types: "#73d0ff",       // blue
-        special: "#f28779",     // red
+        special: "#f28779",
+        parameters: "#5c6166", // red
     };
 
     pub const AYU_DARK: ColorTheme = ColorTheme {
@@ -52,6 +54,7 @@ impl ColorTheme {
         punctuation: "#bfbdb6", // foreground
         strs: "#aad94c",        // green
         types: "#59c2ff",       // blue
-        special: "#f28779",     // red
+        special: "#f28779",
+        parameters: "#5c6166", // red
     };
 }

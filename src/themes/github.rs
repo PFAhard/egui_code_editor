@@ -17,7 +17,8 @@ impl ColorTheme {
         punctuation: "#c9d1d9", // fg.default
         strs: "#a5d6ff",        // scale.blue.1
         types: "#ffa657",       // scale.orange.2
-        special: "#a5d6ff",     // scale.blue.1
+        special: "#a5d6ff",
+        parameters: "#c9d1d9", // scale.blue.1
     };
 
     pub const GITHUB_LIGHT: ColorTheme = ColorTheme {
@@ -34,6 +35,7 @@ impl ColorTheme {
         punctuation: "#24292f", // fg.default
         strs: "#0a3069",        // scale.blue.8
         types: "#953800",       // scale.orange.6
-        special: "#a475f9",     // scale.purple.4
+        special: "#a475f9",
+        parameters: "#c9d1d9", // scale.purple.4
     };
 }

@@ -29,6 +29,9 @@ pub enum TokenType {
     Str(char),
     Type,
     Whitespace(char),
+    Paramter {
+        parameter_bg_color: [u8; 3],
+    },
     #[default]
     Unknown,
 }
@@ -73,6 +76,11 @@ impl std::fmt::Debug for TokenType {
                     '\n' => name.push_str(" New Line"),
                     _ => (),
                 };
+            }
+            TokenType::Paramter {
+                parameter_bg_color: _,
+            } => {
+                name.push_str("Paramter");
             }
             TokenType::Unknown => name.push_str("Unknown"),
         };
