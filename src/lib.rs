@@ -92,7 +92,7 @@ pub use themes::DEFAULT_THEMES;
 pub trait Editor: Hash {
     fn append(&self, job: &mut LayoutJob, token: &Token);
     fn syntax(&self) -> &Syntax;
-    fn background_highligh_ranges(&self) -> &[Parameters];
+    fn background_highligh_ranges(&self) -> &[Parameter];
 }
 
 #[cfg(feature = "editor")]
@@ -110,7 +110,7 @@ pub struct CodeEditor {
     vscroll: bool,
     stick_to_bottom: bool,
     desired_width: f32,
-    ranges: Vec<Parameters>,
+    ranges: Vec<Parameter>,
 }
 
 #[cfg(feature = "editor")]
@@ -144,7 +144,7 @@ impl Default for CodeEditor {
 }
 
 #[derive(Clone, Debug, PartialEq)]
-pub struct Parameters {
+pub struct Parameter {
     pub range: Range<usize>,
     pub bg_color: String,
 }
@@ -265,7 +265,7 @@ impl CodeEditor {
     }
 
     /// Used to highlight the background
-    pub fn background_format_ranges(self, ranges: Vec<Parameters>) -> Self {
+    pub fn background_format_ranges(self, ranges: Vec<Parameter>) -> Self {
         Self { ranges, ..self }
     }
 
@@ -273,7 +273,7 @@ impl CodeEditor {
     pub fn format(&self, ty: TokenType) -> egui::text::TextFormat {
         use egui::Color32;
 
-        let font_id = egui::FontId::monospace(self.fontsize);
+        let font_id = egui::FontId::proportional(self.fontsize);
         let color = self.theme.type_color(ty);
         let mut t_format = egui::text::TextFormat::simple(font_id, color);
 
@@ -282,9 +282,10 @@ impl CodeEditor {
                 parameter_bg_color[0],
                 parameter_bg_color[1],
                 parameter_bg_color[2],
-                10,
+                64, // Lower value = more transparent. Try values between 32-128
             );
-            // #36542f
+            // if parameter_bg_color == color_hex_to_rgb("#b8860b") {#deb03c
+            // }
         }
 
         t_format
@@ -401,7 +402,7 @@ impl Editor for CodeEditor {
         &self.syntax
     }
 
-    fn background_highligh_ranges(&self) -> &[Parameters] {
+    fn background_highligh_ranges(&self) -> &[Parameter] {
         &self.ranges
     }
 }
