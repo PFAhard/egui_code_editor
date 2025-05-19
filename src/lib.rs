@@ -278,11 +278,11 @@ impl CodeEditor {
         let mut t_format = egui::text::TextFormat::simple(font_id, color);
 
         if let TokenType::Paramter { parameter_bg_color } = ty {
-            t_format.background = Color32::from_rgba_premultiplied(
+            t_format.background = Color32::from_rgba_unmultiplied(
                 parameter_bg_color[0],
                 parameter_bg_color[1],
                 parameter_bg_color[2],
-                64, // Lower value = more transparent. Try values between 32-128
+                32, // Lower value = more transparent. Try values between 32-128
             );
             // if parameter_bg_color == color_hex_to_rgb("#b8860b") {#deb03c
             // }

@@ -27,7 +27,7 @@ pub const DEFAULT_THEMES: [ColorTheme; 8] = [
 #[cfg(feature = "egui")]
 fn color_from_hex(hex: &str) -> Option<Color32> {
     if hex == "none" {
-        return Some(Color32::from_rgba_premultiplied(255, 0, 255, 0));
+        return Some(Color32::from_rgba_unmultiplied(255, 0, 255, 0));
     }
     let rgb = (1..hex.len())
         .step_by(2)
