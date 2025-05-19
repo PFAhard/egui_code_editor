@@ -273,7 +273,7 @@ impl CodeEditor {
     pub fn format(&self, ty: TokenType) -> egui::text::TextFormat {
         use egui::Color32;
 
-        let font_id = egui::FontId::proportional(self.fontsize);
+        let font_id = egui::FontId::monospace(self.fontsize);
         let color = self.theme.type_color(ty);
         let mut t_format = egui::text::TextFormat::simple(font_id, color);
 
