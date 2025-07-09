@@ -11,7 +11,8 @@ categories = ["gui", "text-editors"]
 keywords = ["egui", "GUI", "editor", "syntax", "highlighting"]
 
 [dependencies]
-egui = { version = "0.31", optional = true }
+# egui = { version = "0.31", optional = true }
+egui = { path = "C:/Users/pfapo/code/foreign/egui/crates/egui", optional = true}
 serde = { version = "1", optional = true}
 
 [lib]
