@@ -143,7 +143,7 @@ impl Default for CodeEditor {
     }
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, serde::Serialize, serde::Deserialize)]
 pub struct Parameter {
     pub range: Range<usize>,
     pub bg_color: String,
